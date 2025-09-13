@@ -1,0 +1,9 @@
+bin
+obj
+playground
+
+*.cbp
+*.depend
+*.layout
+
+*.bin
