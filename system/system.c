@@ -1,8 +1,10 @@
-#include "system.h"
+#include <stdio.h>
+#include <locale.h>
+#include <string.h>
 
-#include "bTree.h"
-#include "insertion_bTree.h"
-#include "search_bTree.h"
+#include "system.h"
+#include "../bTree/bTree.h"
+
 
 void mensagemBoasVindas()
 {

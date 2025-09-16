@@ -71,6 +71,8 @@ void insercaoNaoCheio(BTNo *no, char *caminho)
 
         copiarChave(no, i + 1, caminho);
         no->n++;
+
+        escreverNo(no);
     }
     else
     {

@@ -2,7 +2,7 @@ bin
 obj
 playground
 
-*.cdp
+*.cbp
 *.depend
 *.layout
 

@@ -56,6 +56,27 @@ void insercaoNaoCheio(BTNo *no, char *caminho);
 
 void insercao(BT *arvore, char *caminho);
 
+void remocao(BT* arvore, char* caminho);
+
+void removerArvoreB(BTNo* raiz, char *k);
+
+bool removerFolhaArvoreB(BTNo *pai, char *k);
+
+bool removerNaoFolhaArvoreB(BTNo *pai, char *k);
+
+char *getPredecessor(BTNo *pai, int i);
+
+char *getSucessor(BTNo *pai, int i);
+
+void emprestarDireita(BTNo *pai, int i);
+
+void emprestarEsquerda(BTNo *pai, int i);
+
+void fillNos(BTNo * pai, int i);
+
+void mergeNos(BTNo *pai, int i);
+
+
 bool freeNo(BTNo* no);
 
 bool freeBTree(BT * arvore);

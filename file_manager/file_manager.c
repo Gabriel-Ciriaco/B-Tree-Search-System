@@ -13,6 +13,8 @@ int NO_ID = 0; // ID do Nó usado para criar um nome específico dele.
 
 BTNo * lerNo(const char * nomeArquivo)
 {
+    if (!nomeArquivo) return NULL;
+
     FILE * noBin = fopen(nomeArquivo, "rb");
 
     if (!noBin)
@@ -46,26 +48,24 @@ BTNo * lerNo(const char * nomeArquivo)
 
     if (nomeArquivoLen > 0)
     {
-        noLido->nomeArquivo = (char*) malloc(sizeof(char) * nomeArquivoLen);
+        noLido->nomeArquivo = (char*) malloc(sizeof(char) * (nomeArquivoLen + 1));
 
         fread(noLido->nomeArquivo, sizeof(char) * nomeArquivoLen, 1, noBin);
 
         noLido->nomeArquivo[nomeArquivoLen] = '\0'; // Finalizar string.
     }
 
-    // Vemos quantas chaves e quantos filhos o nó têm.
-    int qtdChaves = 0;
-    int qtdFilhos = 0;
 
-    fread(&qtdChaves, sizeof(int), 1, noBin);
-    fread(&qtdFilhos, sizeof(int), 1, noBin);
-
-
-    // Recuperando as chaves.
-    if (qtdChaves <= 0)
+    // Verifica se não é um nó vazio.
+    if (noLido->n <= 0)
     {
+        // Recuperando as chaves.
         for (int i = 0; i < 2 * noLido->t - 1; i++)
             noLido->chaves[i] = NULL;
+
+        // Recuperando os filhos.
+        for (int i = 0; i < 2 * noLido->t; i++)
+            noLido->filho[i] = NULL;
     }
     else
     {
@@ -77,26 +77,14 @@ BTNo * lerNo(const char * nomeArquivo)
             fread(&chaveLen, sizeof(int), 1, noBin);
 
             // Alocamos espaço para a chave.
-            noLido->chaves[i] = (char*) malloc(sizeof(char) * chaveLen);
+            noLido->chaves[i] = (char*) malloc(sizeof(char) * (chaveLen + 1));
 
             fread(noLido->chaves[i], sizeof(char) * chaveLen, 1, noBin);
 
-            noLido->chaves[i][chaveLen - 1] = '\0'; // Finalizar string.
+            noLido->chaves[i][chaveLen] = '\0'; // Finalizar string.
         }
 
-        // Seta o resto das chaves como NULL.
-        for (int i = noLido->n; i < 2 * noLido->t - 1; i++)
-            noLido->chaves[i] = NULL;
-    }
-
-    // Recuperando os filhos.
-    if (qtdFilhos <= 0)
-    {
-        for (int i = 0; i < 2 * noLido->t; i++)
-            noLido->filho[i] = NULL;
-    }
-    else
-    {
+        // Salvamos os filhos preenchidos.
         for (int i = 0; i <= noLido->n; i++)
         {
             int filhoLen = 0;
@@ -104,18 +92,21 @@ BTNo * lerNo(const char * nomeArquivo)
             fread(&filhoLen, sizeof(int), 1, noBin);
 
             // Alocamos espaço para o filho.
-            noLido->filho[i] = (char*) malloc(sizeof(char) * filhoLen);
+            noLido->filho[i] = (char*) malloc(sizeof(char) * (filhoLen + 1));
 
             fread(noLido->filho[i], sizeof(char) * filhoLen, 1, noBin);
 
-            noLido->filho[i][filhoLen - 1] = '\0'; // Finalizar string.
+            noLido->filho[i][filhoLen] = '\0'; // Finalizar string.
         }
+
+        // Seta o resto das chaves como NULL.
+        for (int i = noLido->n; i < 2 * noLido->t - 1; i++)
+            noLido->chaves[i] = NULL;
 
         // Seta o resto dos filhos como NULL.
         for (int i = noLido->n + 1; i < 2 * noLido->t; i++)
             noLido->filho[i] = NULL;
     }
-
 
     fclose(noBin);
 
@@ -156,36 +147,10 @@ void escreverNo(BTNo * noEscrever)
 
 
     // Salvando o nome do arquivo com o seu tamanho.
-    int nomeArquivoLen = strlen(noEscrever->nomeArquivo) + 1;
+    int nomeArquivoLen = strlen(noEscrever->nomeArquivo);
 
     fwrite(&nomeArquivoLen, sizeof(int), 1, noBin);
     fwrite(noEscrever->nomeArquivo, sizeof(char) * nomeArquivoLen, 1, noBin);
-
-
-    /*
-        Antes de salvarmos as chaves e os filhos,
-        salvamos quantas chaves e quantos filhos temos.
-    */
-    int qtdChaves = 0;
-    int qtdFilhos = 0;
-
-
-    if (noEscrever->n > 0)
-    {
-        for (int i = 0; i < noEscrever->n; i++)
-            qtdChaves++;
-    }
-
-    if (!noEscrever->ehFolha)
-    {
-        for (int i = 0; i <= noEscrever->n; i++)
-            qtdFilhos++;
-    }
-
-    fwrite(&qtdChaves, sizeof(int), 1, noBin);
-
-    fwrite(&qtdFilhos, sizeof(int), 1, noBin);
-
 
     /*
         As chaves e os filhos, por serem arrays de strings,
@@ -204,7 +169,7 @@ void escreverNo(BTNo * noEscrever)
     {
         for (int i = 0; i < noEscrever->n; i++)
         {
-            int chaveLen = strlen(noEscrever->chaves[i]) + 1;
+            int chaveLen = strlen(noEscrever->chaves[i]);
 
             fwrite(&chaveLen, sizeof(int), 1, noBin);
             fwrite(noEscrever->chaves[i], sizeof(char) * chaveLen, 1, noBin);
@@ -215,7 +180,7 @@ void escreverNo(BTNo * noEscrever)
     {
         for (int i = 0; i <= noEscrever->n; i++)
         {
-            int filhoLen = strlen(noEscrever->filho[i]) + 1;
+            int filhoLen = strlen(noEscrever->filho[i]);
 
             fwrite(&filhoLen, sizeof(int), 1, noBin);
             fwrite(noEscrever->filho[i], sizeof(char) * filhoLen, 1, noBin);

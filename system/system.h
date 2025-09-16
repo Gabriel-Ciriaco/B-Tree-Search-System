@@ -1,7 +1,7 @@
 #ifndef SYSTEM_H_INCLUDED
 #define SYSTEM_H_INCLUDED
 
-#include "bTree.h"
+#include "../bTree/bTree.h"
 
 typedef struct
 {
