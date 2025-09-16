@@ -3,11 +3,10 @@
 
 #include "../bTree/bTree.h"
 
+BTNo *lerNo(const char *nomeArquivo);
+void escreverNo(BTNo *noEscrever);
+void criarNomeNo(BTNo *no);
+void escreverConfiguracoes(BT *arvore);
+void lerConfiguracoes(BT *arvore);
 
-BTNo * lerNo(const char * nomeArquivo);
-
-void escreverNo(BTNo * noEscrever);
-
-void criarNomeNo(BTNo * no);
-
-#endif // FILE_MANAGER_H
+#endif
