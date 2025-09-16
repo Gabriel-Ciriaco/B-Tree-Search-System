@@ -1,19 +1,24 @@
-#ifndef SYSTEM_H_INCLUDED
-#define SYSTEM_H_INCLUDED
+#ifndef SYSTEM_H
+#define SYSTEM_H
+
+#include <stdbool.h>
 
 #include "../bTree/bTree.h"
 
+
 typedef struct
 {
-
     BT *arvore;
-
 }Sistema;
 
 void mensagemBoasVindas();
 
 int rodarMenu();
 
+bool lerConfiguracoes(Sistema* sistema);
+
+void escreverConfiguracoes(Sistema sistema);
+
 void executarSistema();
 
-#endif // SYSTEM_H_INCLUDED
+#endif // SYSTEM_H

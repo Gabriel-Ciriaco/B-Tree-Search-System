@@ -117,6 +117,13 @@ void insercao(BT *arvore, char *caminho)
     }
     else
     {
+        if (BTbusca(arvore, caminho))
+        {
+            printf("\n [INSERÇÃO]: O arquivo \"%s\" já existe na árvore.\n",
+                   caminho);
+            return;
+        }
+
         if(arvore->raiz->n == (2 * (arvore->t)) - 1)
         {
             BTNo *novaRaiz = CriarNo(arvore->t, false);

@@ -1,8 +1,8 @@
 #ifndef BTREE_H
 #define BTREE_H
 
-#include<stdlib.h>
-#include<stdbool.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 
 typedef struct bTNo

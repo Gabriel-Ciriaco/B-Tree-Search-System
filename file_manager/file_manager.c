@@ -11,6 +11,15 @@
 int NO_ID = 0; // ID do Nó usado para criar um nome específico dele.
 
 
+// Extrai o número do padrão "no_%d.bin" e seta o NO_ID.
+void setNO_ID(char* nomeArquivo)
+{
+    if (!nomeArquivo) return;
+
+    if (sscanf(nomeArquivo, "no_%d.bin", &NO_ID) != 1) return;
+}
+
+
 BTNo * lerNo(const char * nomeArquivo)
 {
     if (!nomeArquivo) return NULL;
@@ -213,88 +222,3 @@ void criarNomeNo(BTNo * no)
 
     sprintf(no->nomeArquivo, "no_%d.bin", NO_ID);
 }
-
-
-
-
-// adicionei essas duas
-
-void escreverConfiguracoes(BT *arvore)
-{
-    if (arvore == NULL || arvore->raiz== NULL || arvore->raiz->nomeArquivo== NULL)
-    {
-        // nada p salvar
-        printf("\n[CONFIG]: Nenhuma raiz ou nomeArquivo para salvar.\n");
-        return;
-    }
-
-    FILE *arquivo = fopen("cfg.dat", "wb");
-
-    if (arquivo == NULL)
-    {
-        // se nn abriu, avisa e para
-        printf("\n\n [CONFIG]: ERRO ao criar arquivo de config\n\n");
-        return;
-    }
-
-    // pega o tamanho do nome do arquivo
-    int tamanhoNome = strlen(arvore->raiz->nomeArquivo);
-
-    // coloca esse tamanho no cfg.dat
-    fwrite(&tamanhoNome, sizeof(int), 1, arquivo);
-
-    // agora coloca o nome real (sem o \0
-    fwrite(arvore->raiz->nomeArquivo, sizeof(char), tamanhoNome, arquivo);
-
-    fclose(arquivo);
-    // config deu certo
-
-}
-
-
-void lerConfiguracoes(BT *arvore)
-{
-    if (arvore== NULL)
-    {
-        return; // sem arvore = sem resto de codigo
-    }
-
-
-    FILE *arquivo = fopen("cfg.dat", "rb");
-    if (arquivo == NULL)
-    {
-        // se nn tem config ent avbisa
-        printf("\n\n [CONFIG]: arquivo de configuração NAO encontrado.\n\n");
-        return;
-    }
-
-    int tamanhoNome = 0;
-    // recupera o tamanho salvo
-    fread(&tamanhoNome, sizeof(int), 1, arquivo);
-
-
-    if (tamanhoNome <= 0)
-    {
-        // se nn tem nome fecha e retorna
-        fclose(arquivo);
-        return;
-    }
-
-
-    // aloca espaço +1 pro '\0'
-    char *nomeArquivoRaiz = (char*) malloc((tamanhoNome + 1) * sizeof(char));
-
-    // le o nome
-    fread(nomeArquivoRaiz, sizeof(char), tamanhoNome, arquivo);
-    nomeArquivoRaiz[tamanhoNome] = '\0'; // fecha a string certinho
-
-
-    fclose(arquivo);
-
-    // monta a raiz direto do arquivo salvo
-    arvore->raiz = lerNo(nomeArquivoRaiz);
-
-    free(nomeArquivoRaiz);
-
-}
-
