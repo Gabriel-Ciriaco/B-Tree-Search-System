@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "bTree.h"
+#include "../file_manager/file_manager.h"
 
 
 BTNo *CriarNo(int t1, bool folha1)
@@ -47,13 +48,13 @@ BTNo *CriarNo(int t1, bool folha1)
         novoNo->filho[i] = NULL;
     }
 
-
-    novoNo->nomeArquivo=NULL;
-
     novoNo->n = 0;
     novoNo->t = t1;
     novoNo->ehFolha = folha1;
 
+    novoNo->nomeArquivo = NULL;
+
+    criarNomeNo(novoNo);
 
     return novoNo;
 }
@@ -93,7 +94,7 @@ void copiarChave(BTNo * no, int indice, char * caminho)
     if (caminho)
     {
         // Alocamos um espaço para o caminho.
-        no->chaves[indice] = (char*) malloc(sizeof(char) * strlen(caminho));
+        no->chaves[indice] = (char*) malloc(sizeof(char) * (strlen(caminho) + 1));
 
         strcpy(no->chaves[indice], caminho);
     }
@@ -119,7 +120,7 @@ void copiarFilho(BTNo * no, int indice, char * filho)
     if (filho)
     {
         // Alocamos um espaço para o filho.
-        no->filho[indice] = (char*) malloc(sizeof(char) * strlen(filho));
+        no->filho[indice] = (char*) malloc(sizeof(char) * (strlen(filho) + 1));
 
         strcpy(no->filho[indice], filho);
     }
@@ -157,6 +158,19 @@ bool freeNo(BTNo * no)
         free(no->nomeArquivo);
 
     free(no);
+
+    return true;
+}
+
+bool freeBTree(BT * arvore)
+{
+    if (!arvore) return false;
+
+    if(arvore->raiz)
+        freeNo(arvore->raiz);
+
+    if(arvore->diretorio)
+        free(arvore->diretorio);
 
     return true;
 }

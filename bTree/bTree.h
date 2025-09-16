@@ -58,4 +58,6 @@ void insercao(BT *arvore, char *caminho);
 
 bool freeNo(BTNo* no);
 
+bool freeBTree(BT * arvore);
+
 #endif // BTREE_H

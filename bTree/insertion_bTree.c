@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "bTree.h"
 #include "../file_manager/file_manager.h"
@@ -70,7 +71,6 @@ void insercaoNaoCheio(BTNo *no, char *caminho)
 
         copiarChave(no, i + 1, caminho);
         no->n++;
-        escreverNo(no);
     }
     else
     {
@@ -109,9 +109,9 @@ void insercao(BT *arvore, char *caminho)
 
         copiarChave(arvore->raiz, 0, caminho);
 
-        criarNomeNo(arvore->raiz);
-
         arvore->raiz->n = 1;
+
+        escreverNo(arvore->raiz);
     }
     else
     {
@@ -131,6 +131,8 @@ void insercao(BT *arvore, char *caminho)
         else
         {
             insercaoNaoCheio(arvore->raiz, caminho);
+
+            escreverNo(arvore->raiz);
         }
     }
 }
