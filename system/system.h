@@ -5,6 +5,9 @@
 
 #include "../bTree/bTree.h"
 
+#define ARVORE_PATH "arquivos_arvore"
+#define CFG_PATH "cfg.dat"
+
 
 typedef struct
 {
@@ -20,5 +23,7 @@ bool lerConfiguracoes(Sistema* sistema);
 void escreverConfiguracoes(Sistema sistema);
 
 void executarSistema();
+
+void destruirArvoreSistema();
 
 #endif // SYSTEM_H

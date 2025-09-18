@@ -27,7 +27,7 @@ void remocao(BT* arvore, char* caminho)
             novaRaiz = lerNo(arvore->raiz->filho[0]);
         }
 
-        remove(arvore->raiz->nomeArquivo);
+        remove(arvore->raiz->caminhoNo);
 
         freeNo(arvore->raiz);
 
@@ -124,6 +124,7 @@ bool removerFolhaArvoreB(BTNo *pai, char *k)
         while (i + 1 < pai->n)
         {
             copiarChave(pai, i, pai->chaves[i + 1]);
+            copiarCaminho(pai, i, pai->caminhosArquivos[i + 1]);
             i++;
         }
 
@@ -151,20 +152,22 @@ bool removerNaoFolhaArvoreB(BTNo *pai, char *k)
         // Se o filho da esquerda tem t chaves
         if (esq->n >= pai->t)
         {
-            char *predecessor = getPredecessor(pai, i);
+            BTNo* predecessor = getPredecessor(pai, i);
 
-            removerArvoreB(esq, predecessor);
+            removerArvoreB(esq, predecessor->chaves[predecessor->n - 1]);
 
-            copiarChave(pai, i, predecessor);
+            copiarChave(pai, i, predecessor->chaves[predecessor->n - 1]);
+            copiarCaminho(pai, i, predecessor->caminhosArquivos[predecessor->n - 1]);
         }
         // Se o filho da direita tem t chaves
         else if (dir->n >= pai->t)
         {
-            char *sucessor = getSucessor(pai, i);
+            BTNo* sucessor = getSucessor(pai, i);
 
-            removerArvoreB(dir, sucessor);
+            removerArvoreB(dir, sucessor->chaves[0]);
 
-            copiarChave(pai, i, sucessor);
+            copiarChave(pai, i, sucessor->chaves[0]);
+            copiarCaminho(pai, i, sucessor->caminhosArquivos[0]);
         }
         // Se ambos têm t - 1 chaves.
         else
@@ -178,7 +181,7 @@ bool removerNaoFolhaArvoreB(BTNo *pai, char *k)
     return true;
 }
 
-char *getPredecessor(BTNo *pai, int i)
+BTNo* getPredecessor(BTNo *pai, int i)
 {
     // Pegamos o filho da esquerda.
     BTNo *cur = lerNo(pai->filho[i]);
@@ -190,10 +193,10 @@ char *getPredecessor(BTNo *pai, int i)
     }
 
     // O último elemento é retornado.
-    return cur->chaves[cur->n - 1];
+    return cur;
 }
 
-char *getSucessor(BTNo *pai, int i)
+BTNo* getSucessor(BTNo *pai, int i)
 {
     // Pegamos o filho da direita
     BTNo *cur = lerNo(pai->filho[i + 1]);
@@ -205,7 +208,7 @@ char *getSucessor(BTNo *pai, int i)
     }
 
     // O primeiro elemento é retornado.
-    return cur->chaves[0];
+    return cur;
 }
 
 void emprestarDireita(BTNo *pai, int i)
@@ -217,6 +220,7 @@ void emprestarDireita(BTNo *pai, int i)
     for (int j = filho->n - 1; j >= 0; j--)
     {
         copiarChave(filho, j + 1, filho->chaves[j]);
+        copiarCaminho(filho, j + 1, filho->caminhosArquivos[j]);
     }
 
     if (!filho->ehFolha)
@@ -229,6 +233,7 @@ void emprestarDireita(BTNo *pai, int i)
 
     // Colocando a primeira chave do filho igual a chave[i-1]
     copiarChave(filho, 0, pai->chaves[i - 1]);
+    copiarCaminho(filho, 0, pai->caminhosArquivos[i - 1]);
 
     // Movemos o ponteiro também.
     if (!filho->ehFolha)
@@ -238,6 +243,7 @@ void emprestarDireita(BTNo *pai, int i)
 
     // Movemos a chave do irmão para o pai.
     copiarChave(pai, i - 1, irmao->chaves[irmao->n - 1]);
+    copiarCaminho(pai, i - 1, irmao->caminhosArquivos[irmao->n - 1]);
 
     filho->n++;
     irmao->n--;
@@ -254,6 +260,7 @@ void emprestarEsquerda(BTNo *pai, int i)
 
     // Colocamos a chave do pai no final do filho.
     copiarChave(filho, filho->n, pai->chaves[i]);
+    copiarCaminho(filho, filho->n, pai->caminhosArquivos[i]);
 
     // Salvamos o filho do irmão.
     if (!filho->ehFolha)
@@ -263,11 +270,13 @@ void emprestarEsquerda(BTNo *pai, int i)
 
     // Colocamos a chave do irmão no pai.
     copiarChave(pai, i, irmao->chaves[0]);
+    copiarCaminho(pai, i, irmao->caminhosArquivos[0]);
 
     // Movemos as chaves do irmão para trás
     for (int j = 1; j < irmao->n; j++)
     {
         copiarChave(irmao, j - 1, irmao->chaves[j]);
+        copiarCaminho(irmao, j - 1, irmao->caminhosArquivos[j]);
     }
 
     if (!irmao->ehFolha)
@@ -340,6 +349,7 @@ void mergeNos(BTNo *pai, int i)
     for (int j = 0; j < irmao->n; j++)
     {
         copiarChave(filho, j + pai->t, irmao->chaves[j]);
+        copiarCaminho(filho, j + pai->t, irmao->caminhosArquivos[j]);
     }
 
     if (!irmao->ehFolha)
@@ -359,6 +369,7 @@ void mergeNos(BTNo *pai, int i)
     for (int j = i + 1; j < pai->n; j++)
     {
         copiarChave(pai, j - 1, pai->chaves[j]);
+        copiarCaminho(pai, j - 1, pai->caminhosArquivos[j]);
     }
 
     /*
@@ -378,6 +389,6 @@ void mergeNos(BTNo *pai, int i)
     escreverNo(pai);
 
     // Exclusão do irmão
-    remove(irmao->nomeArquivo);
+    remove(irmao->caminhoNo);
     freeNo(irmao);
 }

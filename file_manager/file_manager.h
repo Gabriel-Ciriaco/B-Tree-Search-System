@@ -4,12 +4,14 @@
 #include "../bTree/bTree.h"
 
 
-void setNO_ID(char* nomeArquivo);
+void setNO_ID(int id);
 
-BTNo *lerNo(const char *nomeArquivo);
+void extrairNomeArquivo(char** nomeArquivo, char* caminho);
+
+BTNo *lerNo(const char *caminhoNo);
 
 void escreverNo(BTNo *noEscrever);
 
-void criarNomeNo(BTNo *no);
+void criarNomeNo(const char* diretorio, BTNo *no);
 
 #endif // FILE_MANAGER_H

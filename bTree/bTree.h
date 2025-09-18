@@ -12,10 +12,12 @@ typedef struct bTNo
     int n; // Número de chaves atuais no nó.
     int t; // Grau mínimo do nó.
 
-    char *nomeArquivo; // Nome do próprio arquivo.
+    char* caminhoNo; // Caminho do nó.
 
-    char **chaves; // As chaves são os caminhos dos arquivos.
+    char **chaves; // As chaves são os nomes dos arquivos.
     char **filho; // Cada filho é um arquivo contendo um nó.
+
+    char** caminhosArquivos; // Os caminhos completos dos nomes dos arquivos.
 
 }BTNo;
 
@@ -38,25 +40,31 @@ typedef struct
 } ResultadoBusca;
 
 
-BTNo *CriarNo(int t1, bool folha1);
+BTNo *CriarNo(const char* diretorio, int t1, bool folha1);
 
-BT *CriarBT(int t1);
+BT *CriarBT(const char* diretorio, int t1);
+
 
 int posElemento(BTNo *no, char *procurado);
 
 BTNo *BTbusca(BT *arvore, char *procurado);
 
-void copiarChave(BTNo * no, int indice, char * caminho);
+
+void copiarChave(BTNo * no, int indice, char * nomeArquivo);
+
+void copiarCaminho(BTNo * no, int indice, char * caminho);
 
 void copiarFilho(BTNo * no, int indice, char * filho);
 
-void splitChild(BTNo *pai, int indice);
 
-void insercaoNaoCheio(BTNo *no, char *caminho);
+void splitChild(BTNo *pai, int indice, const char* diretorio);
+
+void insercaoNaoCheio(BTNo *no, const char* diretorio, char* caminho);
 
 void insercao(BT *arvore, char *caminho);
 
-void remocao(BT* arvore, char* caminho);
+
+void remocao(BT* arvore, char* nomeArquivo);
 
 void removerArvoreB(BTNo* raiz, char *k);
 
@@ -64,9 +72,9 @@ bool removerFolhaArvoreB(BTNo *pai, char *k);
 
 bool removerNaoFolhaArvoreB(BTNo *pai, char *k);
 
-char *getPredecessor(BTNo *pai, int i);
+BTNo* getPredecessor(BTNo *pai, int i);
 
-char *getSucessor(BTNo *pai, int i);
+BTNo* getSucessor(BTNo *pai, int i);
 
 void emprestarDireita(BTNo *pai, int i);
 
@@ -76,6 +84,9 @@ void fillNos(BTNo * pai, int i);
 
 void mergeNos(BTNo *pai, int i);
 
+
+void imprimeArvore(BT *arvore);
+void imprimeEmOrdem(BTNo *no);
 
 bool freeNo(BTNo* no);
 

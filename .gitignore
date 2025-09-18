@@ -1,5 +1,6 @@
 bin
 obj
+arquivos_arvore
 playground
 
 *.cbp
